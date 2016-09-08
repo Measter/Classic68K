@@ -3,6 +3,7 @@
 
 __vm
 Front Panel
+*.pdf
 
 # User-specific files
 *.suo
