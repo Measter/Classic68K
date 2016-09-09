@@ -15,6 +15,9 @@
 #define INSTR_MASK_movetoccr						0xFFC0
 #define INSTR_MASK_movetoccr_VAL					0x44C0
 
+#define INSTR_MASK_jmp								0xFFC0
+#define INSTR_MASK_jmp_VAL							0x4EC0
+
 #define INSTR_MASK_movem							0xFB80
 #define INSTR_MASK_movem_VAL						0x4880
 
@@ -38,6 +41,9 @@
 #define INSTR_SOURCE_REGISTER_MASK_movetoccr		0x007
 #define INSTR_SOURCE_MODE_MASK_movetoccr			0x038
 
+#define INSTR_DEST_REGISTER_MASK_jmp				0x7
+#define INSTR_DEST_MODE_MASK_jmp					0x38
+
 #define INSTR_DEST_REGISTER_MASK_movem				0x7
 #define INSTR_DEST_MODE_MASK_movem					0x38
 
@@ -48,6 +54,9 @@
 #define INSTR_DEST_REG_SHIFT_movefromsr				0x0
 
 #define INSTR_SOURCE_MODE_SHIFT_movetoccr			0x3
+
+#define INSTR_DEST_MODE_SHIFT_jmp					0x3
+#define INSTR_DEST_REG_SHIFT_jmp					0x0
 
 #define INSTR_DEST_MODE_SHIFT_movem					0x3
 #define INSTR_DEST_REG_SHIFT_movem					0x0 

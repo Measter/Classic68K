@@ -54,6 +54,20 @@ bool Core::instr_minor_group_0100(unsigned int instruction) {
 		return instr_movetoccr(instruction);
 	}
 
+	if( is_instr( instruction, jmp ) ) {	// JMP
+		mode = get_instr_dest_mode(instruction, jmp) >> get_instr_dest_mode_shift(jmp);
+		reg = get_instr_dest_register(instruction, jmp) >> get_instr_dest_reg_shift(jmp);
+
+		// Invalid modes.
+		if (mode == MODE_DATA_DIR || mode == MODE_ADDR_DIR
+			|| mode == MODE_ADDR_INDIR_POST || mode == MODE_ADDR_INDIR_PRE
+			|| (mode == MODE_OTHER && reg == REG_ABS_VALUE)) {
+			return false;
+		}
+
+		return instr_jmp(instruction);
+	}
+
 	if (is_instr(instruction, movem)) {		// MoveM
 
 		mode = get_instr_dest_mode(instruction, movem) >> get_instr_dest_mode_shift(movem);
@@ -117,66 +131,34 @@ bool Core::instr_movetoccr(unsigned int instruction) {
 	return true;
 }
 
+bool Core::instr_jmp( unsigned int instruction ) {
+	unsigned long address;
+
+	bool result = calculate_effective_address( get_instr_dest_mode(instruction, jmp) >> get_instr_dest_mode_shift(jmp),
+											   get_instr_dest_register(instruction, jmp) >> get_instr_dest_reg_shift(jmp),
+											   address);
+
+	if (!result) return result;
+
+	registers.pc = address;
+
+	return true;
+}
+
+
 template<typename T>
 bool Core::instr_movem(unsigned int instruction) {
 	unsigned int direction = get_instr_source_mode(instruction, movem);
 	unsigned char mode = get_instr_dest_mode(instruction, movem) >> get_instr_dest_mode_shift(movem);
 	unsigned char reg = get_instr_dest_register(instruction, movem) >> get_instr_dest_reg_shift(movem);
 
-	unsigned int reg_list, dispRegID;
+	unsigned int reg_list;
 	ram.get_memory(registers.pc, reg_list);
 	registers.pc += 2;
 
 	unsigned long address;
-
-	switch (mode) {
-		case MODE_ADDR_INDIR_POST:
-		case MODE_ADDR_INDIR_PRE:
-		case MODE_ADDR_INDIR:
-			address = registers.address_arr[reg];
-			break;
-
-		case MODE_ADDR_DISP:
-			ram.get_memory(registers.pc, address);
-			registers.pc += 2;
-			address = registers.address_arr[reg] + address >> 16;
-			break;
-
-		case MODE_ADDR_INDEX:
-			ram.get_memory(registers.pc, dispRegID);
-			registers.pc += 2;
-
-			address = dispRegID & 0xFF + registers.address_arr[reg];
-			break;
-
-		case MODE_OTHER:
-			if (reg == REG_ABS_WORD) {
-				ram.get_memory(registers.pc, address);
-				registers.pc += 2;
-				address >>= 16;
-			}
-			else if (reg == REG_ABS_LONG) {
-				ram.get_memory(registers.pc, address);
-				registers.pc += 4;
-			}
-			else if (reg == REG_PC_DISP) {
-				ram.get_memory(registers.pc, address);
-				address = registers.pc + (address >> 16);
-				registers.pc += 2;
-			}
-			else if (reg == REG_PC_INDEX) {
-				ram.get_memory(registers.pc, dispRegID);
-				address = dispRegID & 0xFF; // Only lower byte is the offset.
-				dispRegID >>= 12; // Upper half was the register ID.
-
-				address += registers.pc + registers.data_arr[dispRegID];
-
-				registers.pc += 2;
-			}
-			break;
-		default:
-			return false;
-	}
+	bool result = calculate_effective_address(mode, reg, address);
+	if( !result ) return false;
 
 	if (direction != 0) {
 		// Memory to register.

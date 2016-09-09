@@ -31,6 +31,8 @@ private:
 
 	unsigned char reverse(unsigned char b);
 
+	bool calculate_effective_address(unsigned char mode, unsigned char reg, unsigned long &address);
+
 
 	////////////////////////
 	// Major Group 00
@@ -80,6 +82,8 @@ private:
 
 	bool instr_movefromsr(unsigned int instruction);
 	bool instr_movetoccr(unsigned int instruction);
+
+	bool instr_jmp(unsigned int instruction);
 
 	template<typename T>
 	bool instr_movem(unsigned int instruction);

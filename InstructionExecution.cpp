@@ -126,3 +126,59 @@ unsigned char Core::reverse(unsigned char b) {
 	b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
 	return b;
 }
+
+bool Core::calculate_effective_address(unsigned char mode, unsigned char reg, unsigned long &address) {
+	unsigned int dispRegID;
+
+	switch (mode) {
+		case MODE_ADDR_INDIR_POST:
+		case MODE_ADDR_INDIR_PRE:
+		case MODE_ADDR_INDIR:
+			address = registers.address_arr[reg];
+			break;
+
+		case MODE_ADDR_DISP:
+			ram.get_memory(registers.pc, address);
+			registers.pc += 2;
+			address = registers.address_arr[reg] + address >> 16;
+			break;
+
+		case MODE_ADDR_INDEX:
+			ram.get_memory(registers.pc, dispRegID);
+			registers.pc += 2;
+
+			address = dispRegID & 0xFF + registers.address_arr[reg];
+			break;
+
+		case MODE_OTHER:
+			if (reg == REG_ABS_WORD) {
+				ram.get_memory(registers.pc, address);
+				registers.pc += 2;
+				address >>= 16;
+			}
+			else if (reg == REG_ABS_LONG) {
+				ram.get_memory(registers.pc, address);
+				registers.pc += 4;
+			}
+			else if (reg == REG_PC_DISP) {
+				ram.get_memory(registers.pc, address);
+				address = registers.pc + (address >> 16);
+				registers.pc += 2;
+			}
+			else if (reg == REG_PC_INDEX) {
+				ram.get_memory(registers.pc, dispRegID);
+				address = dispRegID & 0xFF; // Only lower byte is the offset.
+				dispRegID >>= 12; // Upper half was the register ID.
+
+				address += registers.pc + registers.data_arr[dispRegID];
+
+				registers.pc += 2;
+			} else if( reg == REG_ABS_VALUE )
+				return false;
+			break;
+		default:
+			return false;
+	}
+
+	return true;
+}
