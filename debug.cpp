@@ -2,6 +2,8 @@
 #include <Arduino.h>
 
 const char digits[] = "0123456789ABCDEF";
+char buffer[4];
+unsigned char buffer_in_loc = 0;
 
 void print_byte(unsigned char value, unsigned char newLine ){
 	char str[3];
@@ -66,4 +68,41 @@ void print_long(unsigned long value, unsigned char newLine ){
 	} else {
 		Serial.print(str);
 	}
+}
+
+// Returns true if the buffer was filled.
+// Call get_debug_input() to grab input and clear buffer.
+bool update_debug_input() {
+	if( Serial.available() ) {
+		char input = Serial.read();
+
+		if( !isHexadecimalDigit( input ) )
+			return false;
+
+		if( isDigit( input ) )
+			buffer[buffer_in_loc] = input - '0';
+		else {
+			input = toLowerCase(input);
+			buffer[buffer_in_loc] = input - 'a' + 10;
+		}
+
+		buffer_in_loc++;
+		if (buffer_in_loc == 4) {
+			buffer_in_loc = 0;
+			return true;		// Filled buffer, so indicate so.
+		}
+	}
+
+	return false;
+}
+
+unsigned int get_debug_input() {
+	unsigned int value = 0;
+
+	unsigned char i;
+	for (i = 0; i < 4; i++) {
+		value = (value << 4) + buffer[i];
+	}
+
+	return value;
 }

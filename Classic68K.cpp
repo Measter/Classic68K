@@ -24,6 +24,12 @@ void loop() {
 	pins.update_inputs();
 	pins.update_leds();
 
+	if( pins.is_debug_pressed() && update_debug_input() ) {
+		ram.set_memory(registers.pc, get_debug_input());
+		registers.pc += 2;
+		return;
+	}
+
 	if( pins.is_reset_pc_pressed() )
 	{
 		registers.pc = pins.get_input();
