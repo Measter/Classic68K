@@ -12,6 +12,15 @@
 #define INSTR_MASK_movep						0xF138
 #define INSTR_MASK_movep_VAL					0x0108
 
+#define INSTR_MASK_andiccr						0xFFFF
+#define INSTR_MASK_andiccr_VAL					0x023C
+
+#define INSTR_MASK_eoriccr						0xFFFF
+#define INSTR_MASK_eoriccr_VAL					0x0A3C
+
+#define INSTR_MASK_oriccr						0xFFFF
+#define INSTR_MASK_oriccr_VAL					0x003C
+
 ////////
 // Size Masks
 ////////

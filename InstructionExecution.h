@@ -45,6 +45,10 @@ private:
 	// Minor 00
 	///////////
 
+	bool instr_andiccr();
+	bool instr_eoriccr();
+	bool instr_oriccr();
+
 	template<typename T>
 	bool instr_movep(unsigned int instruction);
 

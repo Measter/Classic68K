@@ -19,6 +19,18 @@ bool Core::instr_major_group_00(unsigned int instruction) {
 }
 
 bool Core::instr_minor_group_0000(unsigned int instruction) {
+	if( is_instr( instruction, andiccr ) ) {
+		return instr_andiccr();
+	}
+
+	if( is_instr( instruction, eoriccr ) ) {
+		return instr_eoriccr();
+	}
+
+	if( is_instr( instruction, oriccr ) ) {
+		return instr_oriccr();
+	}
+	
 	if (is_instr(instruction, movep)) {		// MoveP
 		if (get_instr_size(instruction, movep) == size(movep, long))
 			instr_movep<unsigned long>(instruction);
@@ -72,6 +84,40 @@ bool Core::instr_minor_group_00_move(unsigned int instruction) {
 ///////////
 // Minor 00
 ///////////
+
+bool Core::instr_andiccr() {
+	unsigned int value;
+	ram.get_memory(registers.pc, value);
+	registers.pc += 2;
+
+	registers.status_flag &= value & 0xFF;
+
+	return true;
+}
+
+bool Core::instr_eoriccr() {
+	unsigned int value;
+	ram.get_memory(registers.pc, value);
+	registers.pc += 2;
+
+	registers.status_flag ^= value & 0xFF;
+
+	return true;
+}
+
+bool Core::instr_oriccr() {
+	unsigned int value;
+	ram.get_memory(registers.pc, value);
+	registers.pc += 2;
+
+	registers.status_flag |= value & 0xFF;
+
+	return true;
+}
+
+
+
+
 template<typename T>
 bool Core::instr_movep(unsigned int instruction) {
 	unsigned char dir = instruction & (1 << 7);
