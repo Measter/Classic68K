@@ -1,13 +1,23 @@
 #ifndef INSTRUCTION_MASKS_H
 #define INSTRUCTION_MASKS_H
 
-#include "instr_move.h"
-#include "instr_movea.h"
-#include "instr_movetoccr.h"
-#include "instr_movefromsr.h"
-#include "instr_movem.h"
-#include "instr_movep.h"
-#include "instr_moveq.h"
+#include "instr_masks_minor_0000.h"
+#include "instr_masks_minor_00--.h"
+
+#include "instr_masks_minor_0100.h"
+#include "instr_masks_minor_0101.h"
+#include "instr_masks_minor_0110.h"
+#include "instr_masks_minor_0111.h"
+
+#include "instr_masks_minor_1000.h"
+#include "instr_masks_minor_1001.h"
+#include "instr_masks_minor_1010.h"
+#include "instr_masks_minor_1011.h"
+
+#include "instr_masks_minor_1100.h"
+#include "instr_masks_minor_1101.h"
+#include "instr_masks_minor_1110.h"
+#include "instr_masks_minor_1111.h"
 
 
 /////////////////////////

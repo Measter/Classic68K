@@ -40,7 +40,7 @@ bool Core::instr_minor_group_0100(unsigned int instruction) {
 		mode = get_instr_dest_mode(instruction, movefromsr) >> get_instr_dest_mode_shift(movefromsr);
 		reg = get_instr_dest_register(instruction, movefromsr) >> get_instr_dest_reg_shift(movefromsr);
 
-		if (mode == INSTR_MODE_VAL_move_addr_dir || (reg != REG_ABS_LONG && reg != REG_ABS_WORD))
+		if (mode == MODE_ADDR_DIR || (mode == MODE_OTHER && (reg != REG_ABS_LONG && reg != REG_ABS_WORD)) )
 			return false;
 
 		return instr_movefromsr(instruction);
@@ -48,7 +48,7 @@ bool Core::instr_minor_group_0100(unsigned int instruction) {
 
 	if (is_instr(instruction, movetoccr))	// MoveToCCR
 	{
-		if ((get_instr_source_mode(instruction, movetoccr) >> get_instr_source_mode_shift(movetoccr)) == INSTR_MODE_VAL_move_addr_dir)
+		if ((get_instr_source_mode(instruction, movetoccr) >> get_instr_source_mode_shift(movetoccr)) == MODE_ADDR_DIR)
 			return false;
 
 		return instr_movetoccr(instruction);

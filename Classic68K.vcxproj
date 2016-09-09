@@ -90,16 +90,23 @@
     <ClInclude Include="InstructionExecution.h" />
     <ClInclude Include="InstructionMasks.h" />
     <ClInclude Include="header_template.h" />
-    <ClInclude Include="instr_move.h" />
-    <ClInclude Include="instr_movea.h" />
-    <ClInclude Include="instr_movem.h" />
-    <ClInclude Include="instr_movep.h" />
-    <ClInclude Include="instr_moveq.h" />
-    <ClInclude Include="instr_movetoccr.h" />
+    <ClInclude Include="instr_masks_minor_00--.h" />
+    <ClInclude Include="instr_masks_minor_0000.h" />
+    <ClInclude Include="instr_masks_minor_0100.h" />
+    <ClInclude Include="instr_masks_minor_0101.h" />
+    <ClInclude Include="instr_masks_minor_0110.h" />
+    <ClInclude Include="instr_masks_minor_0111.h" />
+    <ClInclude Include="instr_masks_minor_1000.h" />
+    <ClInclude Include="instr_masks_minor_1001.h" />
+    <ClInclude Include="instr_masks_minor_1010.h" />
+    <ClInclude Include="instr_masks_minor_1011.h" />
+    <ClInclude Include="instr_masks_minor_1100.h" />
+    <ClInclude Include="instr_masks_minor_1101.h" />
+    <ClInclude Include="instr_masks_minor_1110.h" />
+    <ClInclude Include="instr_masks_minor_1111.h" />
     <ClInclude Include="memory.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="instr_movefromsr.h" />
     <ClInclude Include="pins.h">
       <FileType>CppCode</FileType>
     </ClInclude>

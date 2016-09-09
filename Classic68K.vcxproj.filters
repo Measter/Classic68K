@@ -40,28 +40,49 @@
     <ClInclude Include="InstructionMasks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="instr_move.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="instr_movea.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="instr_movetoccr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="header_template.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="instr_movefromsr.h">
+    <ClInclude Include="instr_masks_minor_0000.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="instr_movem.h">
+    <ClInclude Include="instr_masks_minor_00--.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="instr_movep.h">
+    <ClInclude Include="instr_masks_minor_0100.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="instr_moveq.h">
+    <ClInclude Include="instr_masks_minor_0101.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_0110.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_0111.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_1000.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_1001.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_1010.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_1011.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_1100.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_1101.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_1110.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="instr_masks_minor_1111.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
