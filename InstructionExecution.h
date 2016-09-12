@@ -321,11 +321,11 @@ bool Core::set_from_effective_address(unsigned char mode, unsigned char reg, uns
 
 			break;
 		case MODE_ADDR_INDEX:
-			ram.get_memory(registers.pc++, dispRegID);
-			dispRegID >>= 4;
 			ram.get_memory(registers.pc++, displaceVal);
+			dispRegID = displaceVal >> 12;
+			displaceVal = sign_extend( displaceVal & 0xFF );
 
-			ram.set_memory(registers.address_arr[reg] + registers.address_arr[dispRegID] + displaceVal, value);
+			ram.set_memory(registers.address_arr[reg] + registers.data_arr[dispRegID] + displaceVal, value);
 
 			break;
 		case MODE_OTHER:
