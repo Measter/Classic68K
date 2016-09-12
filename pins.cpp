@@ -64,6 +64,8 @@ IO::IO() {
 	pinMode(MEMORY_LED_CLOCK, OUTPUT);
 	pinMode(MEMORY_LED_LATCH, OUTPUT);
 
+	set_memory_leds(0);
+
 	pinMode(RESET_PC_PIN, INPUT_PULLUP);
 	pinMode(DEPOSIT_PIN, INPUT_PULLUP);
 	pinMode(MEMORY_DUMP_PIN, INPUT_PULLUP);
