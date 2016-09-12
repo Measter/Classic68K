@@ -19,6 +19,8 @@ bool Core::instr_major_group_00(unsigned int instruction) {
 }
 
 bool Core::instr_minor_group_0000(unsigned int instruction) {
+	unsigned int mode, reg;
+	
 	if( is_instr( instruction, andiccr ) ) {
 		return instr_andiccr();
 	}
@@ -29,6 +31,26 @@ bool Core::instr_minor_group_0000(unsigned int instruction) {
 
 	if( is_instr( instruction, oriccr ) ) {
 		return instr_oriccr();
+	}
+
+	if( is_instr( instruction, cmpi ) ) {	// CMPI
+		mode = get_instr_dest_mode(instruction, cmpi) >> get_instr_dest_mode_shift(cmpi);
+		reg = get_instr_dest_register(instruction, cmpi) >> get_instr_dest_reg_shift(cmpi);
+		
+		// Invalid modes.
+		if (mode == MODE_ADDR_DIR || (mode == MODE_OTHER && reg == REG_ABS_VALUE)) {
+			return false;
+		}
+
+		switch (get_instr_size(instruction, cmpi)) {
+			case size(cmpi, byte):
+				return instr_cmpi<unsigned char>(instruction);
+			case size(cmpi, word):
+				return instr_cmpi<unsigned int>(instruction);
+			case size(cmpi, long):
+				return instr_cmpi<unsigned long>(instruction);
+			default: return false;
+		}
 	}
 	
 	if (is_instr(instruction, movep)) {		// MoveP
@@ -116,7 +138,39 @@ bool Core::instr_oriccr() {
 }
 
 
+template<typename T>
+bool Core::instr_cmpi(unsigned int instruction) {
+	T dest, comp;
 
+	bool result = get_from_effective_address(get_instr_dest_mode(instruction, cmpi) >> get_instr_dest_mode_shift(cmpi),
+											 get_instr_dest_register(instruction, cmpi) >> get_instr_dest_reg_shift(cmpi),
+											 instruction, dest);
+
+	if (!result) return result;
+
+	
+	// Even if we're comparing bytes, the immediate value has to be stored as a word.
+	// Because of that we need to read a word.
+	if (sizeof(T) == 1) {
+		unsigned int tVal;
+		ram.get_memory(registers.pc, tVal);
+		registers.pc += 2;
+		comp = tVal;
+	}
+	else {
+		ram.get_memory(registers.pc, comp);
+		registers.pc += sizeof(T);
+	}
+
+	// Making use of two-compliment for overflow and underflow checks.
+	set_condition_code(Status::Leave,
+					   is_negative(static_cast<T>(dest - comp)) ? Status::Set : Status::Clear,
+					   (dest-comp) == 0 ? Status::Set : Status::Clear,
+					   (dest-comp) < comp ? Status::Set : Status::Clear,
+					   (dest-comp) > comp ? Status::Set : Status::Clear);
+	
+	return true;
+}
 
 template<typename T>
 bool Core::instr_movep(unsigned int instruction) {

@@ -52,6 +52,9 @@ private:
 	bool instr_oriccr();
 
 	template<typename T>
+	bool instr_cmpi(unsigned int instruction);
+
+	template<typename T>
 	bool instr_movep(unsigned int instruction);
 
 	///////////
