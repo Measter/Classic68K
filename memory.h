@@ -1,7 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#define mem_max 4096
+#define mem_max 4095
 
 class Memory {
 private:
