@@ -15,7 +15,7 @@ void Registers::init_registers() {
 	address.a4 = address.a5 = 0;
 	address.a6 = address.a7 = 0;
 
-	pc = 0x1000; 
+	pc = 0x0100; 
 	status = 0x2000;
 }
 
