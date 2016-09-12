@@ -1,11 +1,11 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#define mem_size 6144
+#define mem_max 4096
 
 class Memory {
 private:
-	unsigned char memory[mem_size];
+	unsigned char memory[mem_max+1];
 	long last_memory_access;
 
 	bool memory_address_check(unsigned long address);

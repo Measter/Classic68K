@@ -14,7 +14,7 @@ Memory::Memory() {
 
 void Memory::zero_memory() {
 	long i;
-	for (i = 0; i < mem_size; i++) {
+	for (i = 0; i <= mem_max; i++) {
 		memory[i] = 0;
 	}
 }
@@ -52,7 +52,7 @@ void Memory::set_memory(unsigned long address, unsigned char value) {
 	if (last_memory_access != address)
 		last_memory_access = address;
 
-	memory[address] = value;
+	memory[address & mem_max] = value;
 }
 
 void Memory::set_memory(unsigned long address, unsigned int value) {
@@ -68,8 +68,8 @@ void Memory::set_memory(unsigned long address, unsigned int value) {
 	if (last_memory_access != address)
 		last_memory_access = address;
 
-	memory[address] = value >> 8;
-	memory[address + 1] = value;
+	memory[address & mem_max] = value >> 8;
+	memory[(address + 1) & mem_max] = value;
 }
 
 void Memory::set_memory(unsigned long address, unsigned long value) {
@@ -85,10 +85,10 @@ void Memory::set_memory(unsigned long address, unsigned long value) {
 	if (last_memory_access != address)
 		last_memory_access = address;
 
-	memory[address] = value >> 24;
-	memory[address + 1] = value >> 16;
-	memory[address + 2] = value >> 8;
-	memory[address + 3] = value;
+	memory[address & mem_max] = value >> 24;
+	memory[(address + 1) & mem_max] = value >> 16;
+	memory[(address + 2) & mem_max] = value >> 8;
+	memory[(address + 3) & mem_max] = value;
 }
 
 
@@ -194,7 +194,7 @@ void Memory::dump_memory(unsigned long address, unsigned char length) {
 			Serial.print(": ");
 		}
 
-		print_byte(memory[i], false);
+		print_byte(memory[i & mem_max], false);
 		Serial.print(" ");
 	}
 
