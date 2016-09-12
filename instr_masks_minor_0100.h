@@ -21,6 +21,9 @@
 #define INSTR_MASK_movem							0xFB80
 #define INSTR_MASK_movem_VAL						0x4880
 
+#define INSTR_MASK_lea								0xF1C0
+#define INSTR_MASK_lea_VAL							0x41C0
+
 ////////
 // Size Masks
 ////////
@@ -47,6 +50,10 @@
 #define INSTR_DEST_REGISTER_MASK_movem				0x7
 #define INSTR_DEST_MODE_MASK_movem					0x38
 
+#define INSTR_DEST_REGISTER_MASK_lea				0xE00
+#define INSTR_SOURCE_REGISTER_MASK_lea				0x007
+#define INSTR_SOURCE_MODE_MASK_lea					0x038
+
 
 // Shifts
 
@@ -61,5 +68,9 @@
 #define INSTR_DEST_MODE_SHIFT_movem					0x3
 #define INSTR_DEST_REG_SHIFT_movem					0x0 
 #define INSTR_SOURCE_MODE_MASK_movem				0x0400
+
+#define INSTR_SOURCE_MODE_SHIFT_lea					0x3
+#define INSTR_SOURCE_REG_SHIFT_lea					0x0
+#define INSTR_DEST_REG_SHIFT_lea					0x9
 
 #endif // !INSTR_MASKS_MINOR_0100_H

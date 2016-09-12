@@ -88,6 +88,8 @@ private:
 	template<typename T>
 	bool instr_movem(unsigned int instruction);
 
+	bool instr_lea(unsigned int instruction);
+
 
 	///////////
 	// Minor 01

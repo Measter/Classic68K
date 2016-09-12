@@ -91,6 +91,20 @@ bool Core::instr_minor_group_0100(unsigned int instruction) {
 			return instr_movem<unsigned long>(instruction);
 	}
 
+	if( is_instr( instruction, lea ) ) {	// LEA
+		mode = get_instr_source_mode(instruction, lea) >> get_instr_source_mode_shift(lea);
+		reg = get_instr_source_register(instruction, lea);
+
+		// Invalid mode check.
+		if( mode == MODE_DATA_DIR || mode == MODE_ADDR_DIR || 
+			mode == MODE_ADDR_INDIR_PRE || mode == MODE_ADDR_INDIR_POST ||
+			(mode == MODE_OTHER && reg == REG_ABS_VALUE)) {
+			return false;
+		}
+
+		return instr_lea(instruction);
+	}
+
 	return false;
 }
 bool Core::instr_minor_group_0101(unsigned int instruction) {
@@ -195,6 +209,19 @@ bool Core::instr_movem(unsigned int instruction) {
 			}
 		}
 	}
+
+	return true;
+}
+
+bool Core::instr_lea(unsigned int instruction) {
+	unsigned long address;
+	bool result = calculate_effective_address(get_instr_source_mode(instruction, lea) >> get_instr_source_mode_shift(lea),
+											  get_instr_source_register(instruction, lea) >> get_instr_source_reg_shift(lea),
+											  address);
+
+	if (!result) return result;
+
+	registers.address_arr[get_instr_dest_register(instruction, lea) >> get_instr_dest_reg_shift(lea)] = address;
 
 	return true;
 }
