@@ -72,6 +72,7 @@
 #define get_instr_source_mode(instr, name)		(instr & INSTR_SOURCE_MODE_MASK_##name)
 
 #define get_instr_source_mode_shift(name)		INSTR_SOURCE_MODE_SHIFT_##name
+#define get_instr_source_reg_shift(name)		INSTR_SOURCE_REG_SHIFT_##name
 #define get_instr_dest_mode_shift(name)			INSTR_DEST_MODE_SHIFT_##name
 #define get_instr_dest_reg_shift(name)			INSTR_DEST_REG_SHIFT_##name
 
