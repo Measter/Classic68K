@@ -9,17 +9,17 @@
 // OpCode Masks
 ////////
 
-#define INSTR_MASK_addq				0xF100
-#define INSTR_MASK_addq_VAL			0x5000
+#define INSTR_MASK_addq						0xF100
+#define INSTR_MASK_addq_VAL					0x5000
 
 ////////
 // Size Masks
 ////////
 
-#define INSTR_SIZE_MASK_addq		0x00C0
-#define INSTR_SIZE_addq_byte		0x0000
-#define INSTR_SIZE_addq_word		0x0040
-#define INSTR_SIZE_addq_long		0x00C0
+#define INSTR_SIZE_MASK_addq				0x00C0
+#define INSTR_SIZE_addq_byte				0x0000
+#define INSTR_SIZE_addq_word				0x0040
+#define INSTR_SIZE_addq_long				0x00C0
 
 ////////
 // Source/Destination Masks/Shifts
