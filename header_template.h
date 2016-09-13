@@ -26,6 +26,6 @@
 
 // Shifts
 #define INSTR_SOURCE_MODE_SHIFT_$op$		0x3
-#define INSTR_SOURCE_MODE_SHIFT_$op$		0x3
+#define INSTR_SOURCE_REG_SHIFT_$op$			0x3
 #define INSTR_DEST_MODE_SHIFT_$op$			0x6
 #define INSTR_DEST_REG_SHIFT_$op$			0x9
