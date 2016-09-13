@@ -19,7 +19,7 @@
 #define INSTR_SIZE_MASK_addq				0x00C0
 #define INSTR_SIZE_addq_byte				0x0000
 #define INSTR_SIZE_addq_word				0x0040
-#define INSTR_SIZE_addq_long				0x00C0
+#define INSTR_SIZE_addq_long				0x0080
 
 ////////
 // Source/Destination Masks/Shifts
