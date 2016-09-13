@@ -131,6 +131,8 @@ private:
 	// Minor 01
 	///////////
 
+	template<typename T>
+	bool instr_addq(unsigned int instruction);
 
 	///////////
 	// Minor 10

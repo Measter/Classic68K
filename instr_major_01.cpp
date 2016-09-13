@@ -108,6 +108,33 @@ bool Core::instr_minor_group_0100(unsigned int instruction) {
 	return false;
 }
 bool Core::instr_minor_group_0101(unsigned int instruction) {
+	unsigned int mode, reg;
+	
+	if (is_instr(instruction, addq))	// AddQ
+	{
+		mode = get_instr_dest_mode(instruction, addq) >> get_instr_dest_mode_shift(addq);
+		reg = get_instr_dest_register(instruction, addq) >> get_instr_dest_reg_shift(addq);
+
+		// Invalide modes.
+		if (mode == MODE_OTHER && (reg != REG_ABS_LONG && reg != REG_ABS_WORD))
+			return false;
+
+		switch( get_instr_size( instruction, addq ) ) {
+			case size(addq, byte):
+				// Byte is invalide for address registers.
+				if( mode == MODE_ADDR_DIR )
+					return false;
+			
+				return instr_addq<unsigned char>(instruction);
+			case size(addq, word):
+				return instr_addq<unsigned int>(instruction);
+			case size(addq, long):
+				return instr_addq<unsigned long>(instruction);
+			default:
+				return false;
+		}
+	}
+	
 	return false;
 }
 bool Core::instr_minor_group_0110(unsigned int instruction) {
@@ -229,6 +256,55 @@ bool Core::instr_lea(unsigned int instruction) {
 ///////////
 // Minor 01
 ///////////
+
+template<typename T>
+bool Core::instr_addq(unsigned int instruction) {
+	T immediate = get_instr_source_mode(instruction, addq) >> get_instr_source_mode_shift(addq);
+	T data;
+	unsigned long regValue;
+
+	// bit pattern of 000 represents 8 for this instruction.
+	if (immediate == 0) immediate = 8;
+
+	bool result;
+
+	unsigned int mode = get_instr_dest_mode(instruction, addq) >> get_instr_dest_mode_shift(addq);
+	unsigned int reg = get_instr_dest_register(instruction, addq) >> get_instr_dest_reg_shift(addq);
+
+	// We need to leave the upper part of the register intact.
+	if( mode == MODE_ADDR_DIR || mode == MODE_DATA_DIR ) {
+		result = get_from_effective_address(mode, reg, instruction, regValue);
+		data = regValue;
+	} else {
+		result = get_from_effective_address(mode, reg, instruction, data);
+	}
+
+	if( !result ) return result;
+
+	immediate += data;
+
+	// Making use of twos-compliment system to detect overflow and underflow.
+	set_condition_code(immediate < data ? Status::Set : Status::Clear,
+					   is_negative(immediate) ? Status::Set : Status::Clear,
+					   immediate == 0 ? Status::Set : Status::Clear,
+					   immediate > data ? Status::Set : Status::Clear,
+					   immediate < data ? Status::Set : Status::Clear);
+
+	// Restore the data. We need to preserve the register's higher value.
+	// We need to leave the upper part of the register intact.
+	if (mode == MODE_ADDR_DIR || mode == MODE_DATA_DIR) {
+		// We need to mask out only the size that we're using.
+		regValue &= !(static_cast<unsigned long>(static_cast<T>(-1)));
+		regValue |= immediate;
+
+		result = set_from_effective_address(mode, reg, instruction, regValue);
+	}
+	else {
+		result = set_from_effective_address(mode, reg, instruction, immediate);
+	}
+
+	return true;
+}
 
 
 ///////////
