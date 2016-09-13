@@ -127,6 +127,46 @@ unsigned char Core::reverse(unsigned char b) {
 	return b;
 }
 
+bool Core::condition_test(unsigned char condition) {
+	switch (condition) {
+		case CONDITION_TRUE:
+			return true;
+		case CONDITION_FALSE:
+			return false;
+		case CONDITION_HIGH:
+			return !is_carry_set && !is_zero_set;
+		case CONDITION_LOW_OR_SAME:
+			return is_carry_set && is_zero_set;
+		case CONDITION_CARRY_CLEAR:
+			return !is_carry_set;
+		case CONDITION_CARRY_SET:
+			return is_carry_set;
+		case CONDITION_NOT_EQUAL:
+			return !is_zero_set;
+		case CONDITION_EQUAL:
+			return is_zero_set;
+		case CONDITION_OVERFLOW_CLEAR:
+			return !is_overflow_set;
+		case CONDITION_OVERFLOW_SET:
+			return is_overflow_set;
+		case CONDITION_PLUS:
+			return !is_negative_set;
+		case CONDITION_MINUS:
+			return is_negative_set;
+		case CONDITION_GREATER_OR_EQUAL:
+			return (is_negative_set && is_overflow_set) || (!is_negative_set && !is_overflow_set);
+		case CONDITION_LESS_THAN:
+			return (is_negative_set && !is_overflow_set) || (!is_negative_set && is_overflow_set);
+		case CONDITION_GREATER_THAN:
+			return (is_negative_set && is_overflow_set && !is_zero_set) || (!is_negative_set && !is_overflow_set && !is_zero_set);
+		case CONDITION_LESS_OR_EQUAL:
+			return (is_zero_set) || (is_negative_set && !is_overflow_set) || (!is_negative_set && is_overflow_set);
+
+		default:
+			return false;
+	}
+}
+
 bool Core::calculate_effective_address(unsigned char mode, unsigned char reg, unsigned long &address) {
 	unsigned int dispRegID;
 

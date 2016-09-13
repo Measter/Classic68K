@@ -59,7 +59,31 @@
 #define REG_PC_DISP				0x2
 #define REG_PC_INDEX			0x3
 
+// Conditional Tests
+#define CONDITION_TRUE				0b0000
+#define CONDITION_FALSE				0b0001
+#define CONDITION_HIGH				0b0010
+#define CONDITION_LOW_OR_SAME		0b0011
+#define CONDITION_CARRY_CLEAR		0b0100
+#define CONDITION_CARRY_SET			0b0101
+#define CONDITION_NOT_EQUAL			0b0110
+#define CONDITION_EQUAL				0b0111
+#define CONDITION_OVERFLOW_CLEAR	0b1000
+#define CONDITION_OVERFLOW_SET		0b1001
+#define CONDITION_PLUS				0b1010
+#define CONDITION_MINUS				0b1011
+#define CONDITION_GREATER_OR_EQUAL	0b1100
+#define CONDITION_LESS_THAN			0b1101
+#define CONDITION_GREATER_THAN		0b1110
+#define CONDITION_LESS_OR_EQUAL		0b1111
 
+
+
+#define is_carry_set		(registers.status_flag & 0b00001)
+#define is_overflow_set		(registers.status_flag & 0b00010) >> 1
+#define is_zero_set			(registers.status_flag & 0b00100) >> 2
+#define is_negative_set		(registers.status_flag & 0b01000) >> 3
+#define is_extended_set		(registers.status_flag & 0b10000) >> 4
 
 
 #define is_instr(instr, name)			(instr & INSTR_MASK_##name) == INSTR_MASK_##name##_VAL

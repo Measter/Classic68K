@@ -31,6 +31,8 @@ private:
 
 	unsigned char reverse(unsigned char b);
 
+	bool condition_test(unsigned char condition);
+
 	bool calculate_effective_address(unsigned char mode, unsigned char reg, unsigned long &address);
 
 
@@ -137,6 +139,8 @@ private:
 	///////////
 	// Minor 10
 	///////////
+
+	bool instr_bcc(unsigned int instruction);
 
 
 	///////////

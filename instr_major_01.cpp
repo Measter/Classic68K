@@ -2,6 +2,7 @@
 #include "InstructionMasks.h"
 #include "registers.h"
 #include "memory.h"
+#include <Arduino.h>
 
 ////////////////////////
 // Major 01
@@ -138,6 +139,10 @@ bool Core::instr_minor_group_0101(unsigned int instruction) {
 	return false;
 }
 bool Core::instr_minor_group_0110(unsigned int instruction) {
+	if( is_instr( instruction, bcc ) ) {
+		return instr_bcc(instruction);
+	}
+	
 	return false;
 }
 bool Core::instr_minor_group_0111(unsigned int instruction) {
@@ -284,11 +289,13 @@ bool Core::instr_addq(unsigned int instruction) {
 	immediate += data;
 
 	// Making use of twos-compliment system to detect overflow and underflow.
-	set_condition_code(immediate < data ? Status::Set : Status::Clear,
-					   is_negative(immediate) ? Status::Set : Status::Clear,
-					   immediate == 0 ? Status::Set : Status::Clear,
-					   immediate > data ? Status::Set : Status::Clear,
-					   immediate < data ? Status::Set : Status::Clear);
+	if (mode != MODE_ADDR_DIR) {
+		set_condition_code(immediate < data ? Status::Set : Status::Clear,
+						   is_negative(immediate) ? Status::Set : Status::Clear,
+						   immediate == 0 ? Status::Set : Status::Clear,
+						   Status::Clear,
+						   immediate < data ? Status::Set : Status::Clear);
+	}
 
 	// Restore the data. We need to preserve the register's higher value.
 	// We need to leave the upper part of the register intact.
@@ -310,6 +317,23 @@ bool Core::instr_addq(unsigned int instruction) {
 ///////////
 // Minor 10
 ///////////
+
+bool Core::instr_bcc(unsigned int instruction) {
+	unsigned int address_offset = instruction & 0xFF;
+
+	// Check if offset is in next word.
+	if( address_offset == 0 ) {
+		ram.get_memory(registers.pc, address_offset);
+		registers.pc += 2;
+	}
+
+	unsigned long new_address = registers.pc + static_cast<int>(address_offset) - 2;
+
+	if( condition_test( get_instr_source_mode( instruction, bcc ) >> get_instr_source_mode_shift( bcc ) ) )
+		registers.pc = new_address;
+
+	return true;
+}
 
 
 ///////////
