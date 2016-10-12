@@ -85,6 +85,9 @@
     <ClInclude Include="instr_masks_minor_1111.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Trap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -115,6 +118,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Classic68K.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Trap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

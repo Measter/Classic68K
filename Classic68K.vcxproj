@@ -113,6 +113,7 @@
     <ClInclude Include="registers.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="Trap.h" />
     <ClInclude Include="__vm\.Classic68K.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +127,7 @@
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="pins.cpp" />
     <ClCompile Include="registers.cpp" />
+    <ClCompile Include="Trap.cpp" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
