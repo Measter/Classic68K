@@ -85,6 +85,8 @@ private:
 	// Minor 00
 	///////////
 
+	bool instr_trap(unsigned int instruction);
+
 	bool instr_movefromsr(unsigned int instruction);
 	bool instr_movetoccr(unsigned int instruction);
 

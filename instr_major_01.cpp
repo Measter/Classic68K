@@ -3,6 +3,8 @@
 #include "registers.h"
 #include "memory.h"
 #include <Arduino.h>
+#include "pins.h"
+#include "Trap.h"
 
 ////////////////////////
 // Major 01
@@ -35,6 +37,11 @@ bool Core::instr_major_group_01(unsigned int instruction) {
 
 bool Core::instr_minor_group_0100(unsigned int instruction) {
 	unsigned int mode, reg;
+
+	if (is_instr(instruction, trap)) // TRAP
+	{
+		return instr_trap(instruction);
+	}
 
 	if (is_instr(instruction, movefromsr))	// MoveFromSR
 	{
@@ -156,6 +163,22 @@ bool Core::instr_minor_group_0111(unsigned int instruction) {
 ///////////
 // Minor 00
 ///////////
+
+bool Core::instr_trap( unsigned int instruction ) {
+	unsigned char vector = get_instr_dest_register(instruction, trap);
+
+	if( !Trap::IsValidVector(vector) ) {
+		if( pins.is_debug_pressed() )
+			Serial.println("Unknown Trap Vector");
+
+		return false;
+	}
+
+	Trap::ExecuteTrap(vector);
+
+	return true;
+}
+
 
 bool Core::instr_movefromsr(unsigned int instruction) {
 	return set_from_effective_address<unsigned int>(get_instr_dest_mode(instruction, movefromsr) >> get_instr_dest_mode_shift(movefromsr),

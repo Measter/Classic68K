@@ -9,6 +9,9 @@
 // OpCode Masks
 ////////
 
+#define INSTR_MASK_trap								0xFFF0
+#define INSTR_MASK_trap_VAL							0x4E40
+
 #define INSTR_MASK_movefromsr						0xFFC0
 #define INSTR_MASK_movefromsr_VAL					0x40C0
 
@@ -37,6 +40,8 @@
 ////////
 
 // Masks
+
+#define INSTR_DEST_REGISTER_MASK_trap		0x00F
 
 #define INSTR_DEST_REGISTER_MASK_movefromsr			0x007
 #define INSTR_DEST_MODE_MASK_movefromsr				0x038
