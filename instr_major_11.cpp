@@ -102,7 +102,7 @@ bool Core::instr_and(unsigned int instruction) {
 	if( get_instr_dest_mode( instruction, and ) ) {
 		result = set_from_effective_address(get_instr_source_mode(instruction, and) >> get_instr_source_mode_shift(and),
 											get_instr_source_register(instruction, and) >> get_instr_source_reg_shift(and),
-											instruction, opB);
+											instruction, opA);
 	} else {
 		regVal &= !(static_cast<unsigned long>(static_cast<T>(-1)));
 		regVal |= opA;
