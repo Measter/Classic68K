@@ -165,6 +165,9 @@ private:
 	// Minor 00
 	///////////
 
+	template<typename T>
+	bool instr_and(unsigned int instruction);
+
 	///////////
 	// Minor 01
 	///////////
