@@ -18,6 +18,9 @@
 #define INSTR_MASK_oriccr						0xFFFF
 #define INSTR_MASK_oriccr_VAL					0x003C
 
+#define INSTR_MASK_andi							0xFF00
+#define INSTR_MASK_andi_VAL						0x0200
+
 #define INSTR_MASK_cmpi							0xFF00
 #define INSTR_MASK_cmpi_VAL						0x0C00
 
@@ -27,6 +30,11 @@
 ////////
 // Size Masks
 ////////
+
+#define INSTR_SIZE_MASK_andi					0x00C0
+#define INSTR_SIZE_andi_byte					0x0000
+#define INSTR_SIZE_andi_word					0x0040
+#define INSTR_SIZE_andi_long					0x0080
 
 #define INSTR_SIZE_MASK_cmpi					0x00C0
 #define INSTR_SIZE_cmpi_byte					0x0000
@@ -42,6 +50,9 @@
 ////////
 
 // Masks
+#define INSTR_DEST_REGISTER_MASK_andi			0x007
+#define INSTR_DEST_MODE_MASK_andi				0x038
+
 #define INSTR_DEST_REGISTER_MASK_cmpi			0x07
 #define INSTR_DEST_MODE_MASK_cmpi				0x38
 
@@ -49,6 +60,9 @@
 #define INSTR_SOURCE_REGISTER_MASK_movep		0x007
 
 // Shifts
+#define INSTR_DEST_MODE_SHIFT_andi				0x3
+#define INSTR_DEST_REG_SHIFT_andi				0x0
+
 #define INSTR_DEST_MODE_SHIFT_cmpi				0x3
 #define INSTR_DEST_REG_SHIFT_cmpi				0x0
 

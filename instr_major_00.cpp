@@ -33,6 +33,26 @@ bool Core::instr_minor_group_0000(unsigned int instruction) {
 		return instr_oriccr();
 	}
 
+	if( is_instr( instruction, andi ) ) {	// ANDI
+		mode = get_instr_dest_mode(instruction, andi) >> get_instr_dest_mode_shift(andi);
+		reg = get_instr_dest_register(instruction, andi) >> get_instr_dest_reg_shift(andi);
+
+		// Invalid modes.
+		if (mode == MODE_ADDR_DIR || (mode == MODE_OTHER && (reg == REG_ABS_VALUE || reg == REG_PC_DISP || reg == REG_PC_INDEX))) {
+			return false;
+		}
+
+		switch (get_instr_size(instruction, andi)) {
+			case size(andi, byte):
+				return instr_andi<unsigned char>(instruction);
+			case size(andi, word):
+				return instr_andi<unsigned int>(instruction);
+			case size(andi, long):
+				return instr_andi<unsigned long>(instruction);
+			default: return false;
+		}
+	}
+
 	if( is_instr( instruction, cmpi ) ) {	// CMPI
 		mode = get_instr_dest_mode(instruction, cmpi) >> get_instr_dest_mode_shift(cmpi);
 		reg = get_instr_dest_register(instruction, cmpi) >> get_instr_dest_reg_shift(cmpi);
@@ -137,6 +157,33 @@ bool Core::instr_oriccr() {
 	return true;
 }
 
+template<typename T>
+bool Core::instr_andi(unsigned int instruction) const {
+	T opA = read_instruction_immediate_value<T>();
+	T opB;
+
+	bool result = get_from_effective_address(get_instr_dest_mode(instruction, andi) >> get_instr_dest_mode_shift(andi),
+											 get_instr_dest_register(instruction, andi) >> get_instr_dest_reg_shift(andi),
+											 instruction, opB);
+
+	if (!result) return result;
+
+	opA &= opB;
+
+	result = set_from_effective_address(get_instr_dest_mode(instruction, andi) >> get_instr_dest_mode_shift(andi),
+										get_instr_dest_register(instruction, andi) >> get_instr_dest_reg_shift(andi),
+										instruction, opA);
+	
+	if (!result) return result;
+
+	set_condition_code(Status::Leave,
+					   is_negative(opA) ? Status::Set : Status::Leave,
+					   opA == 0 ? Status::Set : Status::Leave,
+					   Status::Clear,
+					   Status::Clear);
+
+	return true;
+}
 
 template<typename T>
 bool Core::instr_cmpi(unsigned int instruction) {
@@ -148,19 +195,7 @@ bool Core::instr_cmpi(unsigned int instruction) {
 
 	if (!result) return result;
 
-	
-	// Even if we're comparing bytes, the immediate value has to be stored as a word.
-	// Because of that we need to read a word.
-	if (sizeof(T) == 1) {
-		unsigned int tVal;
-		ram.get_memory(registers.pc, tVal);
-		registers.pc += 2;
-		comp = tVal;
-	}
-	else {
-		ram.get_memory(registers.pc, comp);
-		registers.pc += sizeof(T);
-	}
+	comp = read_instruction_immediate_value<T>();
 
 	// Making use of two-compliment for overflow and underflow checks.
 	set_condition_code(Status::Leave,
