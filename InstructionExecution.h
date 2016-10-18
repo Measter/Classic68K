@@ -33,6 +33,9 @@ private:
 
 	bool condition_test(unsigned char condition);
 
+	template<typename T>
+	T read_instruction_immediate_value() const;
+
 	bool calculate_effective_address(unsigned char mode, unsigned char reg, unsigned long &address);
 
 
@@ -52,6 +55,9 @@ private:
 	bool instr_andiccr();
 	bool instr_eoriccr();
 	bool instr_oriccr();
+	
+	template<typename T>
+	bool instr_andi(unsigned int instruction) const;
 
 	template<typename T>
 	bool instr_cmpi(unsigned int instruction);
@@ -304,7 +310,7 @@ bool Core::set_from_effective_address(unsigned char mode, unsigned char reg, uns
 
 	switch (mode) {
 		case MODE_DATA_DIR:
-			registers.data_arr[reg] &= 0xFFFFFF00;
+			registers.data_arr[reg] &= !(static_cast<unsigned long>(static_cast<T>(-1)));
 			registers.data_arr[reg] |= value;
 			break;
 		case MODE_ADDR_INDIR:
@@ -370,6 +376,23 @@ bool Core::set_from_effective_address(unsigned char mode, unsigned char reg, uns
 	return true;
 }
 
+// Even if we're reading a byte, the immediate value has to be stored as a word or long.
+template<typename T>
+T Core::read_instruction_immediate_value() const {
+	T immediate;
+	if (sizeof(T) == 1) {
+		unsigned int tVal;
+		ram.get_memory(registers.pc, tVal);
+		registers.pc += 2;
+		immediate = tVal;
+	}
+	else {
+		ram.get_memory(registers.pc, immediate);
+		registers.pc += sizeof(T);
+	}
+
+	return immediate;
+}
 
 #endif
 
